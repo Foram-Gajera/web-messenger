@@ -10,11 +10,11 @@ const Login = () => {
   const userLogin = (e) => {
     e.preventDefault();
 
-    if (email == "") {
+    if (email === "") {
       alert("Email is required");
       return;
     }
-    if (password == "") {
+    if (password === "") {
       alert("Password is required");
       return;
     }

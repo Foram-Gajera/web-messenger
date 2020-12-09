@@ -19,6 +19,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+export default firebase;
+
 //for testing here create a global variable to see each changes in the browser
 window.store = store;
 

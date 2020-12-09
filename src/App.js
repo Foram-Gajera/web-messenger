@@ -4,13 +4,16 @@ import Home from "./containers/HomePage/Home";
 import Login from "./containers/LoginPage/Login";
 import Register from "./containers/RegisterPage/Register";
 import "./App.css";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Switch>
-          <Route path="/" exact component={Home} />
+          {/* only logged in users can see */}
+          <PrivateRoute path="/" exact component={Home} />
+
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Register} />
         </Switch>
