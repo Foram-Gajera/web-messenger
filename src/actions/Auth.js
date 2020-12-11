@@ -4,6 +4,7 @@
 // import firebase from "firebase";
 // import { auth, firestore } from "firebase";
 import firebase from "../index";
+import { authConstanst } from "./Constants";
 
 export const signup = (user) => {
   return (dispatch) => {
@@ -23,18 +24,18 @@ export const signup = (user) => {
             displayName: name,
           })
           .then(() => {
-            //if it is updated successfully then this runs
-            debugger;
+            //if you are here means it is updated successfully
             db.collection("users")
-              .add({
+              .doc(data.user.uid)
+              .set({
                 firstName: user.firstName,
                 lastName: user.lastName,
                 uid: data.user.uid,
                 createdAt: new Date(),
+                isOnline: true,
               })
               .then(() => {
                 //succeful
-                debugger;
                 const loggedInUser = {
                   firstName: user.firstName,
                   lastName: user.lastName,
@@ -42,16 +43,22 @@ export const signup = (user) => {
                   email: user.email,
                 };
                 localStorage.setItem("user", JSON.stringify(loggedInUser));
-                console.log("logged in successfully...!");
+                console.log("User logged in successfully...!");
+                dispatch({
+                  type: `${authConstanst.USER_LOGIN}_SUCCESS`,
+                  payload: { user: loggedInUser },
+                });
               })
               .catch((error) => {
-                debugger;
                 console.log(error);
+                dispatch({
+                  type: `${authConstanst.USER_LOGIN}_FAILURE`,
+                  payload: { error },
+                });
               });
           });
       })
       .catch((error) => {
-        debugger;
         console.log(error);
       });
   };
