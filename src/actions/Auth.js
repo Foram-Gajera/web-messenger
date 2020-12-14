@@ -63,3 +63,100 @@ export const signup = (user) => {
       });
   };
 };
+
+export const signin = (user) => {
+  return (dispatch) => {
+    dispatch({ type: `${authConstanst.USER_LOGIN}_REQUEST` });
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(user.email, user.password)
+      .then((data) => {
+        console.log(data);
+
+        const db = firebase.firestore();
+        db.collection("users")
+          .doc(data.user.uid)
+          .update({
+            isOnline: true,
+          })
+          .then(() => {
+            const name = data.user.displayName.split(" ");
+            const firstName = name[0];
+            const lastName = name[1];
+
+            const loggedInUser = {
+              firstName,
+              lastName,
+              uid: data.user.uid,
+              email: data.user.email,
+            };
+
+            localStorage.setItem("user", JSON.stringify(loggedInUser));
+
+            dispatch({
+              type: `${authConstanst.USER_LOGIN}_SUCCESS`,
+              payload: { user: loggedInUser },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({
+          type: `${authConstanst.USER_LOGIN}_FAILURE`,
+          payload: { err },
+        });
+      });
+  };
+};
+
+export const isLoggedInUser = () => {
+  return (dispatch) => {
+    const user = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+    if (user) {
+      dispatch({
+        type: `${authConstanst.USER_LOGIN}_SUCCESS`,
+        payload: { user },
+      });
+    } else {
+      dispatch({
+        type: `${authConstanst.USER_LOGIN}_FAILURE`,
+        payload: { error: "Login agin please!" },
+      });
+    }
+  };
+};
+
+export const logout = (uid) => {
+  return (dispatch) => {
+    dispatch({ type: `${authConstanst.USER_LOGOUT}_REQUEST` });
+    //now lets logout
+
+    const db = firebase.firestore();
+
+    db.collection("users")
+      .doc(uid)
+      .update({ isOnline: false })
+      .then(() => {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            //successfully logout
+
+            localStorage.clear();
+            dispatch({ type: `${authConstanst.USER_LOGOUT}_SUCCESS` });
+          })
+          .catch((err) => {
+            console.log(err);
+            dispatch({ type: `${authConstanst.USER_LOGOUT}_FAILURE` });
+          });
+      })
+      .catch((err) => console.log(err));
+  };
+};

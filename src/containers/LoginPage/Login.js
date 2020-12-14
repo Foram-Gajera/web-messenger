@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
+import { signin } from "../../actions/Auth";
 import Layout from "../../components/Layout/Layout";
 import Card from "../../components/UI/Card/Card";
 import "./style.css";
@@ -6,6 +9,14 @@ import "./style.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
+  // useEffect(() => {
+  //   if (!auth.authenticated) {
+  //     dispatch(isLoggedInUser());
+  //   }
+  // }, []);
 
   const userLogin = (e) => {
     e.preventDefault();
@@ -18,13 +29,12 @@ const Login = () => {
       alert("Password is required");
       return;
     }
-
-    // dispatch(signin({ email, password }));
+    dispatch(signin({ email, password }));
   };
 
-  // if(auth.authenticated){
-  //   return <Redirect to={`/`} />
-  // }
+  if (auth.authenticated) {
+    return <Redirect to={`/`} />;
+  }
 
   return (
     <Layout>
