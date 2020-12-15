@@ -2,12 +2,14 @@ import { userConstants } from "./Constants";
 import firebase from "../index";
 
 export const getRealTimeUsers = (uid) => {
-  return (dispatch) => {
+  //if anything return from async function then it will be a promise
+  return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_REALTIME_USERS}_REQUEST` });
 
     const db = firebase.firestore();
 
-    db.collection("users")
+    const unsubscribe = db
+      .collection("users")
       //   .where("uid", "!=", uid)  //firebase does not support !=, ==,>, <
       .onSnapshot((querySnapshot) => {
         const users = [];
@@ -22,5 +24,6 @@ export const getRealTimeUsers = (uid) => {
           payload: { users },
         });
       });
+    return unsubscribe;
   };
 };
