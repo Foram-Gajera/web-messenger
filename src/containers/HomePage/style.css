@@ -83,3 +83,25 @@
   position: relative;
   top: 40px;
 }
+
+.onlineStatus {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #16e316;
+  border-radius: 5px;
+  box-shadow: 0 0 5px 0 #16e316;
+}
+.onlineStatus.off {
+  background: green;
+  box-shadow: 0 0 0 0;
+}
+
+.offlineStatus {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #f1b42e;
+  border-radius: 5px;
+  box-shadow: 0 0 5px 0 #f1b42e;
+}
