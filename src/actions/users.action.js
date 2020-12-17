@@ -29,7 +29,7 @@ export const getRealTimeUsers = (uid) => {
 };
 
 export const updateMessage = (msgObj) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     const db = firebase.firestore();
 
     db.collection("conversations")

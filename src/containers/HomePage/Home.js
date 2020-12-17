@@ -82,7 +82,9 @@ const Home = (props) => {
     };
     console.log(msg);
     if (message !== "") {
-      dispatch(updateMessage(msg));
+      dispatch(updateMessage(msg)).then(() => {
+        setMessage("");
+      });
     }
   };
 
